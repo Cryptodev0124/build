@@ -1,0 +1,36 @@
+import { Account, Connection } from "@near-js/accounts";
+import { FinalExecutionOutcome } from "@near-js/types";
+import BN from "bn.js";
+import { HereAuthStorage } from "./storage/HereKeyStore";
+import { HereStrategy } from "./strategies/HereStrategy";
+import { HereCall, HereAsyncOptions, HereWalletProtocol, SignAndSendTransactionOptions, SignAndSendTransactionsOptions, SignInOptions, HereInitializeOptions, SignMessageOptionsNEP0413, SignMessageOptionsLegacy, SignMessageLegacyReturn, SignedMessageNEP0413 } from "./types";
+export declare class HereWallet implements HereWalletProtocol {
+    readonly connection: Connection;
+    readonly authStorage: HereAuthStorage;
+    readonly strategy: HereStrategy;
+    static connect(options?: HereInitializeOptions): Promise<HereWallet>;
+    readonly ethProvider?: any;
+    readonly ethAddress?: string;
+    readonly telegramId?: number;
+    private constructor();
+    get rpc(): import("@near-js/providers").Provider;
+    get signer(): import("@near-js/signers").Signer;
+    get networkId(): string;
+    account(id?: string): Promise<Account>;
+    isSignedIn(): Promise<boolean>;
+    signOut(): Promise<void>;
+    getHereBalance(id?: string): Promise<BN>;
+    getAvailableBalance(id?: string): Promise<BN>;
+    getAccounts(): Promise<string[]>;
+    getAccountId(): Promise<string>;
+    switchAccount(id: string): Promise<void>;
+    signIn({ contractId, allowance, methodNames, strategy, signal, callbackUrl, selector, }?: SignInOptions): Promise<string>;
+    silentSignAndSendTransaction({ actions, receiverId, signerId }: HereCall): Promise<FinalExecutionOutcome>;
+    signAndSendTransaction(opts: SignAndSendTransactionOptions): Promise<FinalExecutionOutcome>;
+    verifyMessageNEP0413(request: SignMessageOptionsNEP0413, result: SignedMessageNEP0413): Promise<boolean>;
+    authenticate(options?: HereAsyncOptions & Partial<SignMessageOptionsNEP0413>): Promise<SignedMessageNEP0413>;
+    signMessage(options: HereAsyncOptions & SignMessageOptionsNEP0413): Promise<SignedMessageNEP0413>;
+    signMessage(options: HereAsyncOptions & SignMessageOptionsLegacy): Promise<SignMessageLegacyReturn>;
+    legacySignMessage({ receiver, message, nonce, ...delegate }: SignMessageOptionsLegacy & HereAsyncOptions): Promise<SignMessageLegacyReturn>;
+    signAndSendTransactions({ transactions, ...delegate }: SignAndSendTransactionsOptions): Promise<FinalExecutionOutcome[]>;
+}
